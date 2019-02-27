@@ -108,6 +108,7 @@
     <string name="action_info">Info</string>
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_changelog">Changelog</string>
 
     <string name="confirm_delete_dialog_title">Delete file</string>
     <string name="confirm_delete_dialog_message">Delete the selected update file?</string>
@@ -152,4 +153,7 @@
     <string name="new_updates_channel_title">New updates</string>
     <string name="ongoing_channel_title">Ongoing downloads</string>
     <string name="update_failed_channel_title">Update failed</string>
+
+    <string name="changelog_url" translatable="false">https://raw.githubusercontent.com/CesiumOS-org/ota_config/ten/<xliff:g id="device_name">%1$s</xliff:g>.md</string>
+    <string name="changelog_fail">Failed to retrieve changelog</string>
 </resources>
