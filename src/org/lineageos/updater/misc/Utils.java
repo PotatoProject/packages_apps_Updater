@@ -62,7 +62,23 @@ public class Utils {
     }
 
     public static File getDownloadPath(Context context) {
-        return new File(context.getString(R.string.download_path));
+        if (context == null)
+            return null;
+        String downloadPath =
+                SystemProperties.get(getProjectProp(Constants.PROP_DOWNLOAD_PATH));
+        if (downloadPath.trim().isEmpty())
+            downloadPath = context.getString(R.string.download_path);
+        File dir = new File(downloadPath);
+        if (!dir.isDirectory()) {
+            if (dir.exists()) {
+                return null;
+            } else {
+                if (dir.mkdirs()) {
+                    Log.e(TAG, "Failed to create ota_package dir! Is the app privileged?");
+                }
+            }
+        }
+        return dir;
     }
 
     public static File getExportPath(Context context) {
@@ -84,10 +100,10 @@ public class Utils {
     // used to initialize UpdateInfo objects
     private static UpdateInfo parseJsonUpdate(JSONObject object) throws JSONException {
         Update update = new Update();
-        update.setTimestamp(object.getLong("datetime"));
+        update.setTimestamp(object.getLong("build_date"));
         update.setName(object.getString("filename"));
-        update.setDownloadId(object.getString("id"));
-        update.setType(object.getString("romtype"));
+        update.setDownloadId(object.getString("md5"));
+        update.setType(object.getString("build_type"));
         update.setFileSize(object.getLong("size"));
         update.setDownloadUrl(object.getString("url"));
         update.setVersion(object.getString("version"));
@@ -95,16 +111,16 @@ public class Utils {
     }
 
     public static boolean isCompatible(UpdateBaseInfo update) {
-        if (update.getVersion().compareTo(SystemProperties.get(Constants.PROP_BUILD_VERSION)) < 0) {
+        if (update.getVersion().compareTo(SystemProperties.get(getProjectProp(Constants.PROP_BUILD_VERSION))) < 0) {
             Log.d(TAG, update.getName() + " is older than current Android version");
             return false;
         }
-        if (!SystemProperties.getBoolean(Constants.PROP_UPDATER_ALLOW_DOWNGRADING, false) &&
+        if (!SystemProperties.getBoolean(getProjectProp(Constants.PROP_UPDATER_ALLOW_DOWNGRADING), false) &&
                 update.getTimestamp() <= SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0)) {
             Log.d(TAG, update.getName() + " is older than/equal to the current build");
             return false;
         }
-        if (!update.getType().equalsIgnoreCase(SystemProperties.get(Constants.PROP_RELEASE_TYPE))) {
+        if (!update.getType().equalsIgnoreCase(SystemProperties.get(getProjectProp(Constants.PROP_RELEASE_TYPE)))) {
             Log.d(TAG, update.getName() + " has type " + update.getType());
             return false;
         }
@@ -127,7 +143,7 @@ public class Utils {
         }
 
         JSONObject obj = new JSONObject(json);
-        JSONArray updatesList = obj.getJSONArray("response");
+        JSONArray updatesList = obj.getJSONArray("results");
         for (int i = 0; i < updatesList.length(); i++) {
             if (updatesList.isNull(i)) {
                 continue;
@@ -150,10 +166,10 @@ public class Utils {
     public static String getServerURL(Context context) {
         String incrementalVersion = SystemProperties.get(Constants.PROP_BUILD_VERSION_INCREMENTAL);
         String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
-                SystemProperties.get(Constants.PROP_DEVICE));
-        String type = SystemProperties.get(Constants.PROP_RELEASE_TYPE).toLowerCase(Locale.ROOT);
+                SystemProperties.get(getProjectProp(Constants.PROP_DEVICE)));
+        String type = SystemProperties.get(getProjectProp(Constants.PROP_RELEASE_TYPE)).toLowerCase(Locale.ROOT);
 
-        String serverUrl = SystemProperties.get(Constants.PROP_UPDATER_URI);
+        String serverUrl = SystemProperties.get(getProjectProp(Constants.PROP_UPDATER_URI));
         if (serverUrl.trim().isEmpty()) {
             serverUrl = context.getString(R.string.updater_server_url);
         }
@@ -163,15 +179,19 @@ public class Utils {
                 .replace("{incr}", incrementalVersion);
     }
 
+    static String getProjectProp(String prop) {
+            return prop.replace("{project}", SystemProperties.get(Constants.PROP_PROJECT_NAME));
+    }
+
     public static String getUpgradeBlockedURL(Context context) {
-        String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
-                SystemProperties.get(Constants.PROP_DEVICE));
-        return context.getString(R.string.blocked_update_dialog_message, device);
+//        String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
+//                SystemProperties.get(getProjectProp(Constants.PROP_DEVICE)));
+        return context.getString(R.string.blocked_update_dialog_message);
     }
 
     public static String getChangelogURL(Context context) {
         String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
-                SystemProperties.get(Constants.PROP_DEVICE));
+                SystemProperties.get(getProjectProp(Constants.PROP_DEVICE)));
         return context.getString(R.string.changelog_url, device);
     }
 

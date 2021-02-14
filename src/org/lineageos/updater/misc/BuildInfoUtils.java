@@ -17,6 +17,8 @@ package org.lineageos.updater.misc;
 
 import android.os.SystemProperties;
 
+import static org.lineageos.updater.misc.Utils.getProjectProp;
+
 public final class BuildInfoUtils {
 
     private BuildInfoUtils() {
@@ -27,6 +29,6 @@ public final class BuildInfoUtils {
     }
 
     public static String getBuildVersion() {
-        return SystemProperties.get(Constants.PROP_BUILD_VERSION);
+        return SystemProperties.get(getProjectProp(Constants.PROP_BUILD_VERSION));
     }
 }
