@@ -52,4 +52,28 @@
         android:layout_marginBottom="16dp"
         android:text="@string/menu_update_recovery"
         android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/update_channel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/preferences_update_channel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/menu_update_channel" />
+
+        <Button
+            android:id="@+id/preferences_update_channel_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:text="@string/menu_update_channel_apply" />
+
+    </LinearLayout>
 </LinearLayout>
