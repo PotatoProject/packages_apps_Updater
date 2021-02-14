@@ -188,9 +188,7 @@ public class Utils {
     }
 
     public static String getChangelogURL(Context context) {
-        String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
-                SystemProperties.get(getProjectProp(Constants.PROP_DEVICE)));
-        return context.getString(R.string.changelog_url, device);
+        return context.getString(R.string.changelog_url);
     }
 
     public static void triggerUpdate(Context context, String downloadId) {
