@@ -17,8 +17,7 @@ package org.lineageos.updater.misc;
 
 public final class Constants {
 
-    private Constants() {
-    }
+    private Constants() { }
 
     public static final String AB_PAYLOAD_BIN_PATH = "payload.bin";
     public static final String AB_PAYLOAD_PROPERTIES_PATH = "payload_properties.txt";
@@ -31,8 +30,10 @@ public final class Constants {
     public static final String PREF_LAST_UPDATE_CHECK = "last_update_check";
     public static final String PREF_AUTO_UPDATES_CHECK_INTERVAL = "auto_updates_check_interval";
     public static final String PREF_AUTO_DELETE_UPDATES = "auto_delete_updates";
+    public static final String PREF_DEVELOPER_MODE = "developer_mode";
     public static final String PREF_MOBILE_DATA_WARNING = "pref_mobile_data_warning";
     public static final String PREF_NEEDS_REBOOT_ID = "needs_reboot_id";
+    public static final String PREF_RELEASE_TYPE = "release_type";
 
     public static final String UNCRYPT_FILE_EXT = ".uncrypt";
     public static final String DEFAULT_RELEASE_TYPE = "__default__";

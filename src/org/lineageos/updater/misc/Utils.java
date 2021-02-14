@@ -110,7 +110,7 @@ public class Utils {
         return update;
     }
 
-    public static boolean isCompatible(UpdateBaseInfo update) {
+    public static boolean isCompatible(UpdateBaseInfo update, Context context) {
         if (update.getVersion().compareTo(SystemProperties.get(getProjectProp(Constants.PROP_BUILD_VERSION))) < 0) {
             Log.d(TAG, update.getName() + " is older than current Android version");
             return false;
@@ -120,7 +120,7 @@ public class Utils {
             Log.d(TAG, update.getName() + " is older than/equal to the current build");
             return false;
         }
-        if (!update.getType().equalsIgnoreCase(SystemProperties.get(getProjectProp(Constants.PROP_RELEASE_TYPE)))) {
+        if (!update.getType().equalsIgnoreCase(getReleaseType(context))) {
             Log.d(TAG, update.getName() + " has type " + update.getType());
             return false;
         }
@@ -131,7 +131,7 @@ public class Utils {
         return (update.getTimestamp() > SystemProperties.getLong(Constants.PROP_BUILD_DATE, 0));
     }
 
-    public static List<UpdateInfo> parseJson(File file, boolean compatibleOnly)
+    public static List<UpdateInfo> parseJson(File file, boolean compatibleOnly, Context context)
             throws IOException, JSONException {
         List<UpdateInfo> updates = new ArrayList<>();
 
@@ -150,7 +150,7 @@ public class Utils {
             }
             try {
                 UpdateInfo update = parseJsonUpdate(updatesList.getJSONObject(i));
-                if (!compatibleOnly || isCompatible(update)) {
+                if (!compatibleOnly || isCompatible(update, context)) {
                     updates.add(update);
                 } else {
                     Log.d(TAG, "Ignoring incompatible update " + update.getName());
@@ -167,7 +167,7 @@ public class Utils {
         String incrementalVersion = SystemProperties.get(Constants.PROP_BUILD_VERSION_INCREMENTAL);
         String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
                 SystemProperties.get(getProjectProp(Constants.PROP_DEVICE)));
-        String type = SystemProperties.get(getProjectProp(Constants.PROP_RELEASE_TYPE)).toLowerCase(Locale.ROOT);
+        String type = getReleaseType(context);
 
         String serverUrl = SystemProperties.get(getProjectProp(Constants.PROP_UPDATER_URI));
         if (serverUrl.trim().isEmpty()) {
@@ -226,10 +226,10 @@ public class Utils {
      * @throws IOException
      * @throws JSONException
      */
-    public static boolean checkForNewUpdates(File oldJson, File newJson)
+    public static boolean checkForNewUpdates(File oldJson, File newJson, Context context)
             throws IOException, JSONException {
-        List<UpdateInfo> oldList = parseJson(oldJson, true);
-        List<UpdateInfo> newList = parseJson(newJson, true);
+        List<UpdateInfo> oldList = parseJson(oldJson, true, context);
+        List<UpdateInfo> newList = parseJson(newJson, true, context);
         Set<String> oldIds = new HashSet<>();
         for (UpdateInfo update : oldList) {
             oldIds.add(update.getDownloadId());
@@ -416,6 +416,33 @@ public class Utils {
                 return AlarmManager.INTERVAL_DAY * 7;
             case Constants.AUTO_UPDATES_CHECK_INTERVAL_MONTHLY:
                 return AlarmManager.INTERVAL_DAY * 30;
+        }
+    }
+
+    public static String getDevice(Context context) {
+        return SystemProperties.get(getProjectProp(Constants.PROP_DEVICE));
+    }
+
+    public static String getModel() {
+        return SystemProperties.get(Constants.PROP_MODEL);
+    }
+
+    public static String getReleaseType(Context context) {
+        String type = PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(Constants.PREF_RELEASE_TYPE, Constants.DEFAULT_RELEASE_TYPE);
+        if (type == null || type.equals(Constants.DEFAULT_RELEASE_TYPE)) {
+            return SystemProperties.get(getProjectProp(Constants.PROP_RELEASE_TYPE)).toLowerCase(Locale.ROOT);
+        } else {
+            return type.toLowerCase(Locale.ROOT);
+        }
+    }
+
+    public static void setReleaseType(Context context, String type) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if (type == null) {
+            preferences.edit().remove(Constants.PREF_RELEASE_TYPE).apply();
+        } else {
+            preferences.edit().putString(Constants.PREF_RELEASE_TYPE, type).apply();
         }
     }
 

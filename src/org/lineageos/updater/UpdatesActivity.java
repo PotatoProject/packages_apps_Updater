@@ -36,6 +36,10 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -74,6 +78,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import static com.google.android.material.snackbar.Snackbar.LENGTH_SHORT;
+
 public class UpdatesActivity extends UpdatesListActivity {
 
     private static final String TAG = "UpdatesActivity";
@@ -83,6 +89,10 @@ public class UpdatesActivity extends UpdatesListActivity {
     private UpdatesListAdapter mAdapter;
 
     private View mUpdateButton;
+
+    private ImageView mHeaderImage;
+    private boolean mDevModeEnabled = false;
+    private int mDevModeCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +175,31 @@ public class UpdatesActivity extends UpdatesListActivity {
                 downloadUpdatesList(true);
             }
         });
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mDevModeEnabled = prefs.getBoolean(Constants.PREF_DEVELOPER_MODE, false);
+        mHeaderImage = findViewById(R.id.header_image);
+        mHeaderImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleDeveloperModeTaps();
+            }
+        });
+    }
+
+    private void handleDeveloperModeTaps() {
+        mDevModeCounter++;
+        if (mDevModeCounter == 10) {
+            mDevModeCounter = 0;
+            setDevModeEnabled(!mDevModeEnabled);
+        }
+    }
+
+    private void setDevModeEnabled(boolean enable) {
+        Snackbar.make(findViewById(R.id.main_container), "Developer mode " + (enable ? "enabled" : "disabled" ), LENGTH_SHORT).show();
+        mDevModeEnabled = enable;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.edit().putBoolean(Constants.PREF_DEVELOPER_MODE, mDevModeEnabled).apply();
     }
 
     @Override
@@ -239,7 +274,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         UpdaterController controller = mUpdaterService.getUpdaterController();
         boolean newUpdates = false;
 
-        List<UpdateInfo> updates = Utils.parseJson(jsonFile, true);
+        List<UpdateInfo> updates = Utils.parseJson(jsonFile, true, this);
         List<String> updatesOnline = new ArrayList<>();
         for (UpdateInfo update : updates) {
             newUpdates |= controller.addUpdate(update);
@@ -307,7 +342,7 @@ public class UpdatesActivity extends UpdatesListActivity {
             preferences.edit().putLong(Constants.PREF_LAST_UPDATE_CHECK, millis).apply();
             updateLastCheckedString();
             if (json.exists() && Utils.isUpdateCheckEnabled(this) &&
-                    Utils.checkForNewUpdates(json, jsonNew)) {
+                    Utils.checkForNewUpdates(json, jsonNew, this)) {
                 UpdatesCheckReceiver.updateRepeatingUpdatesCheck(this);
             }
             // In case we set a one-shot check because of a previous failure
@@ -403,6 +438,11 @@ public class UpdatesActivity extends UpdatesListActivity {
         Switch autoDelete = view.findViewById(R.id.preferences_auto_delete_updates);
         Switch dataWarning = view.findViewById(R.id.preferences_mobile_data_warning);
         Switch updateRecovery = view.findViewById(R.id.preferences_update_recovery);
+        LinearLayout updateChannel = view.findViewById(R.id.update_channel);
+        EditText updateChannelText = view.findViewById(R.id.preferences_update_channel);
+        Button updateChannelButton = view.findViewById(R.id.preferences_update_channel_button);
+
+        updateChannel.setVisibility(mDevModeEnabled ? View.VISIBLE : View.GONE);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         autoCheckInterval.setSelection(Utils.getUpdateCheckSetting(this));
@@ -437,7 +477,7 @@ public class UpdatesActivity extends UpdatesListActivity {
             });
         }
 
-        new AlertDialog.Builder(this)
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.menu_preferences)
                 .setView(view)
                 .setOnDismissListener(dialogInterface -> {
@@ -464,5 +504,15 @@ public class UpdatesActivity extends UpdatesListActivity {
                     }
                 })
                 .show();
+
+        updateChannelButton.setOnClickListener(v -> {
+            Utils.setReleaseType(this, updateChannelText.getText().toString());
+            alertDialog.hide();
+        });
+        updateChannelButton.setOnLongClickListener(v -> {
+            Utils.setReleaseType(this, null);
+            alertDialog.hide();
+            return true;
+        });
     }
 }
