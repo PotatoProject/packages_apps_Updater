@@ -184,8 +184,6 @@ public class Utils {
     }
 
     public static String getUpgradeBlockedURL(Context context) {
-//        String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
-//                SystemProperties.get(getProjectProp(Constants.PROP_DEVICE)));
         return context.getString(R.string.blocked_update_dialog_message);
     }
 
