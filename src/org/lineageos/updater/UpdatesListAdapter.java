@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.PowerManager;
@@ -420,7 +421,11 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
             }
             break;
             case CHANGELOG: {
-                clickListener = enabled ? view -> new getChangelogDialog().execute(Utils.getChangelogURL(view.getContext())) : null;
+                clickListener = enabled ? view -> {
+                    Intent openUrl = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(Utils.getChangelogURL(view.getContext())));
+                    view.getContext().startActivity(openUrl);
+                } : null;
             }
             break;
             default:
