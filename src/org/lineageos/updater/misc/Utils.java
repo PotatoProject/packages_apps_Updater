@@ -455,10 +455,6 @@ public class Utils {
         }
     }
 
-    public static boolean isRecoveryUpdateExecPresent() {
-        return new File(Constants.UPDATE_RECOVERY_EXEC).exists();
-    }
-
     public static AlertDialog.Builder getInstallDialog(final String downloadId, Activity activity) {
         if (!isBatteryLevelOk(activity)) {
             Resources resources = activity.getResources();
