@@ -81,6 +81,7 @@ class UpdateInstaller {
         preferences.edit()
                 .putLong(Constants.PREF_INSTALL_OLD_TIMESTAMP, buildTimestamp)
                 .putLong(Constants.PREF_INSTALL_NEW_TIMESTAMP, update.getTimestamp())
+                .putString(Constants.PREF_INSTALL_VERSION, update.getVersion())
                 .putString(Constants.PREF_INSTALL_PACKAGE_PATH, update.getFile().getAbsolutePath())
                 .putBoolean(Constants.PREF_INSTALL_AGAIN, isReinstalling)
                 .putBoolean(Constants.PREF_INSTALL_NOTIFIED, false)
