@@ -486,7 +486,7 @@ public class Utils {
         String buildDate = StringGenerator.getDateLocalizedUTC(activity,
                 DateFormat.MEDIUM, update.getTimestamp());
         String buildInfoText = activity.getString(R.string.list_build_version_date,
-                BuildInfoUtils.getBuildVersion(), buildDate);
+                update.getVersion(), buildDate);
         return new AlertDialog.Builder(activity)
                 .setTitle(R.string.apply_update_dialog_title)
                 .setMessage(activity.getString(resId, buildInfoText,
