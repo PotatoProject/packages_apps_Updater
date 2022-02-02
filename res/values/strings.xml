@@ -78,7 +78,7 @@
     <string name="menu_copy_url">Copy URL</string>
     <string name="menu_export_update">Export update</string>
     <string name="menu_show_changelog">Show changelog</string>
-    <string name="menu_changelog_url" translatable="false">https://github.com/PotatoProject/vendor_potato/blob/dumaloo-release/CHANGELOG.md</string>
+    <string name="menu_changelog_url" translatable="false">https://github.com/PotatoProject/vendor_potato/blob/frico-release/CHANGELOG.md</string>
     <string name="menu_update_recovery">Update recovery</string>
     <string name="menu_update_channel">Update channel</string>
     <string name="menu_update_channel_apply">Apply</string>
@@ -157,7 +157,7 @@
     <string name="ongoing_channel_title">Ongoing downloads</string>
     <string name="update_failed_channel_title">Update failed</string>
 
-    <string name="changelog_url" translatable="false">https://github.com/PotatoProject/vendor_potato/blob/dumaloo-release/CHANGELOG.md</string>
+    <string name="changelog_url" translatable="false">https://github.com/PotatoProject/vendor_potato/blob/frico-release/CHANGELOG.md</string>
     <string name="changelog_fail">Failed to retrieve changelog</string>
 
 </resources>
