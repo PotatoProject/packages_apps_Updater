@@ -13,9 +13,10 @@ LOCAL_STATIC_ANDROID_LIBRARIES := \
     androidx.core_core \
     androidx.appcompat_appcompat \
     androidx.cardview_cardview \
+    androidx.documentfile_documentfile \
     androidx.localbroadcastmanager_localbroadcastmanager \
     androidx.preference_preference \
-    androidx.recyclerview_recyclerview \
+    androidx.recyclerview_recyclerview
 
 LOCAL_RESOURCE_DIR := \
     $(LOCAL_PATH)/res
