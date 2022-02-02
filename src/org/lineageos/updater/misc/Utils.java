@@ -525,6 +525,7 @@ public class Utils {
         }
         update.setDownloadUrl("manual");
         update.setVersion("manual");
+        update.setStatus(UpdateStatus.DOWNLOADED);
         return update;
     }
 
