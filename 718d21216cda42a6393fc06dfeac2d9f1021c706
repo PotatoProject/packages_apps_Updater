@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e58bd62_adb4a6c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000082
+      },
+      "writtenOn": "2022-02-02T07:50:54Z",
+      "side": 1,
+      "message": "Check changing the DPI? ",
+      "revId": "718d21216cda42a6393fc06dfeac2d9f1021c706",
+      "serverId": "8720d348-3d66-43e6-b480-1d69039ac554"
+    }
+  ]
+}
