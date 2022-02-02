@@ -488,7 +488,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         }
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.menu_preferences)
+               // .setTitle(R.string.menu_preferences)
                 .setView(view)
                 .setOnDismissListener(dialogInterface -> {
                     prefs.edit()
