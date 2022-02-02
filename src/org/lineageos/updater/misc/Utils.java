@@ -47,6 +47,7 @@ import org.lineageos.updater.controller.UpdaterService;
 import org.lineageos.updater.model.Update;
 import org.lineageos.updater.model.UpdateBaseInfo;
 import org.lineageos.updater.model.UpdateInfo;
+import org.lineageos.updater.model.UpdateStatus;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -525,6 +526,7 @@ public class Utils {
         }
         update.setDownloadUrl("manual");
         update.setVersion("manual");
+        update.setStatus(UpdateStatus.DOWNLOADED);
         return update;
     }
 
