@@ -46,6 +46,7 @@
     <string name="menu_copy_url">Копирај URL</string>
     <string name="menu_export_update">Извези ажурирања</string>
     <string name="menu_show_changelog">Прикажи дневник измена</string>
+    <string name="menu_ab_perf_mode">Приоритет процеса ажурирања</string>
     <string name="snack_updates_found">Ново ажурирање пронађено</string>
     <string name="snack_no_updates_found">Нису пронађена нова ажурирања</string>
     <string name="snack_updates_check_failed">Провера за ажурирања није успела. Провери своју интернет везу и покушај поново касније.</string>
